@@ -1,4 +1,7 @@
-﻿namespace TicTacToe;
+﻿using System;
+using System.Xml.Linq;
+
+namespace TicTacToe;
 
 public class Program
 {
@@ -12,17 +15,18 @@ public class Program
 
         PrintBoard(board);
 
-        HumanPlayer player1 = new HumanPlayer('X');
-        ComputerPlayer player2 = new ComputerPlayer('O');
+        Player1 HumanPlayer = new Player1("Human",'X');
+        Player2 ComputerPlayer = new Player2("Computer",'O');
+        string currentPlayer;
 
         bool isPlayer1Turn = true;
 
         while (true)
         {
-            Player currentPlayer = isPlayer1Turn ? (Player)player1 : (Player)player2;
+            currentPlayer = isPlayer1Turn ? HumanPlayer.ToString() : ComputerPlayer.ToString();
             Console.WriteLine("Player " + (isPlayer1Turn ? "1" : "2") + "'s turn:");
 
-            if (currentPlayer is HumanPlayer)
+            if (currentPlayer == HumanPlayer.ToString())
             {
                 Console.WriteLine("Enter row (1-3):");
                 int row = int.Parse(Console.ReadLine()) - 1;
@@ -32,7 +36,7 @@ public class Program
 
                 try
                 {
-                    currentPlayer.MakeMove(board, row, col);
+                    HumanPlayer.HumanMove(board, row, col);
                 }
                 catch (Exception ex)
                 {
@@ -40,15 +44,15 @@ public class Program
                     continue;
                 }
             }
-            else if (currentPlayer is ComputerPlayer)
+            if (currentPlayer == ComputerPlayer.ToString())
             {
-                (int row, int col) = player2.ChooseMove(board);
-                currentPlayer.MakeMove(board, row, col);
+                (int row, int col) = ComputerPlayer.ComputerMove(board);
+                
             }
 
             PrintBoard(board);
 
-            if (CheckWinner(board, currentPlayer.Symbol))
+            if (CheckWinner(board, currentPlayer[currentPlayer.Length - 1]))
             {
                 Console.WriteLine("Player " + (isPlayer1Turn ? "1" : "2") + " wins!");
                 break;
@@ -116,157 +120,71 @@ public class Program
     }
 }
 
-public abstract class Player
-{
-    public char Symbol { get; private set; }
 
-    public Player(char symbol)
+
+public class Player1 
+{
+    private string NameOfPlayer1;
+    private char SymbolOfPlayer1;
+
+    public string HumanPlayer { get; set; }
+    public char HumanSymbol { get; set; }
+
+    public Player1(string name, char symbol)
     {
-        Symbol = symbol;
+        NameOfPlayer1 = name;
+        SymbolOfPlayer1 = symbol;
     }
 
-    public abstract void MakeMove(char[,] board, int row, int col);
-}
-
-public class HumanPlayer : Player
-{
-    public HumanPlayer(char symbol) : base(symbol) { }
-
-    public override void MakeMove(char[,] board, int row, int col)
+    public char HumanMove(char[,] board, int row, int col)
     {
         if (row < 0 || row >= board.GetLength(0) || col < 0 || col >= board.GetLength(1) || board[row, col] != ' ')
         {
             throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
         }
 
-        board[row, col] = Symbol;
+        board[row, col] = HumanSymbol;
+        return HumanSymbol;
+    }
+
+    public override string ToString()
+    {
+        return $"HumanPlayer: {HumanPlayer}, HumanSymbol: {HumanSymbol}";
     }
 }
 
-public class ComputerPlayer : Player
+public class Player2
 {
-    public ComputerPlayer(char symbol) : base(symbol) { }
+    private string NameOfPlayer2;
+    private char SymbolOfPlayer2;
 
-    public override void MakeMove(char[,] board, int row, int col)
+    public string ComputerPlayer { get; set; }
+    public char ComputerSymbol { get; set; }
+
+    public Player2(string name, char symbol)
     {
-        // Computer player should not use this method
-        throw new InvalidOperationException("Computer player cannot make move with explicit row and column.");
+        NameOfPlayer2 = name;
+        SymbolOfPlayer2 = symbol;
     }
 
-    public (int, int) ChooseMove(char[,] board)
+    public (int, int) ComputerMove(char[,] board)
     {
-        int bestScore = int.MinValue;
-        int bestRow = -1;
-        int bestCol = -1;
-
-        for (int row = 0; row < 3; row++)
+        // Choose a random empty cell
+        Random random = new Random();
+        int row, col;
+        do
         {
-            for (int col = 0; col < 3; col++)
-            {
-                if (board[row, col] == ' ')
-                {
-                    board[row, col] = Symbol;
-                    int score = Minimax(board, 0, false);
-                    board[row, col] = ' ';
+            row = random.Next(0, 3);
+            col = random.Next(0, 3);
+        } while (board[row, col] != ' ');
 
-                    if (score > bestScore)
-                    {
-                        bestScore = score;
-                        bestRow = row;
-                        bestCol = col;
-                    }
-                }
-            }
-        }
-
-        return (bestRow, bestCol);
+        return (row, col);
     }
-
-    private int Minimax(char[,] board, int depth, bool isMaximizing)
+        
+    public override string ToString()
     {
-        char winner = CheckWinnerOfCurrentBoard(board);
-        if (winner == Symbol)
-        {
-            return 10 - depth;
-        }
-        else if (winner != ' ')
-        {
-            return depth - 10;
-        }
-        else if (IsBoardFull(board))
-        {
-            return 0;
-        }
-
-        if (isMaximizing)
-        {
-            int bestScore = int.MinValue;
-            for (int row = 0; row < 3; row++)
-            {
-                for (int col = 0; col < 3; col++)
-                {
-                    if (board[row, col] == ' ')
-                    {
-                        board[row, col] = Symbol;
-                        int score = Minimax(board, depth + 1, false);
-                        board[row, col] = ' ';
-                        bestScore = Math.Max(score, bestScore);
-                    }
-                }
-            }
-            return bestScore;
-        }
-        else
-        {
-            int bestScore = int.MaxValue;
-            for (int row = 0; row < 3; row++)
-            {
-                for (int col = 0; col < 3; col++)
-                {
-                    if (board[row, col] == ' ')
-                    {
-                        board[row, col] = GetOpponentSymbol();
-                        int score = Minimax(board, depth + 1, true);
-                        board[row, col] = ' ';
-                        bestScore = Math.Min(score, bestScore);
-                    }
-                }
-            }
-            return bestScore;
-        }
-    }
-
-    private char GetOpponentSymbol()
-    {
-        return Symbol == 'X' ? 'O' : 'X';
-    }
-
-    private char CheckWinnerOfCurrentBoard(char[,] board)
-    {
-        // Check rows, columns, and diagonals for a winner
-        for (int i = 0; i < 3; i++)
-        {
-            if (board[i, 0] == board[i, 1] && board[i, 1] == board[i, 2] && board[i, 0] != ' ')
-                return board[i, 0];
-            if (board[0, i] == board[1, i] && board[1, i] == board[2, i] && board[0, i] != ' ')
-                return board[0, i];
-        }
-        if (board[0, 0] == board[1, 1] && board[1, 1] == board[2, 2] && board[0, 0] != ' ')
-            return board[0, 0];
-        if (board[0, 2] == board[1, 1] && board[1, 1] == board[2, 0] && board[0, 2] != ' ')
-            return board[0, 2];
-        return ' ';
-    }
-
-    private bool IsBoardFull(char[,] board)
-    {
-        foreach (char cell in board)
-        {
-            if (cell == ' ')
-            {
-                return false;
-            }
-        }
-        return true;
+        return $"ComputerPlayer: {ComputerPlayer}, ComputerSymbol: {ComputerSymbol}";
     }
 }
+
+
