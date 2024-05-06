@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace TicTacToe
 {
@@ -19,12 +20,12 @@ namespace TicTacToe
         const int DIFFICULT_MODE = 2;
         const char HUMAN_SYMBOL = 'X';
         const char COMPUTER_SYMBOL = 'O';
-
+        const string PLAYER1 = "Human";
+        const string PLAYER2 = "Computer";
 
         public static void Main(string[] args)
         {
-            string player1 = "Human";
-            string player2 = "Computer";
+            
             char boardEmptySpace = ' ';
             char[,] board = new char[BOARD_ROW_DIM, BOARD_COLUMN_DIM];
             bool isPlayer1Turn = true;
@@ -47,10 +48,10 @@ namespace TicTacToe
 
             while (true)
             {
-                string currentPlayer = isPlayer1Turn ? player1 : player2;
+                string currentPlayer = isPlayer1Turn ? PLAYER1 : PLAYER2;
                 Console.WriteLine($"It is {currentPlayer}'s turn:");
 
-                if (currentPlayer == player1)
+                if (currentPlayer == PLAYER1)
                 {
                     Console.Write($"Enter row ({ROW_1}-{ROW_3}):\t");
                     int row = int.Parse(Console.ReadLine()) - 1;
@@ -68,7 +69,7 @@ namespace TicTacToe
                         continue;
                     }
                 }
-                else if (currentPlayer == player2)
+                else if (currentPlayer == PLAYER2)
                 {
                     if (gameMode == EASY_MODE)
                     {
@@ -85,15 +86,15 @@ namespace TicTacToe
                 PrintBoard(board);
                 if (EasyModeCheckWinner(board, HUMAN_SYMBOL))
                 {
-                    Console.WriteLine(player1 + " wins!");
+                    Console.WriteLine(PLAYER1 + " wins!");
                     break;
                 }
-                else if (EasyModeCheckWinner(board, COMPUTER_SYMBOL))
+                if (EasyModeCheckWinner(board, COMPUTER_SYMBOL))
                 {
-                    Console.WriteLine(player2 + " wins!");
+                    Console.WriteLine(PLAYER2 + " wins!");
                     break;
                 }
-                else if (IsBoardFull(board))
+                if (IsBoardFull(board))
                 {
                     Console.WriteLine("It's a draw!");
                     break;
@@ -227,7 +228,6 @@ namespace TicTacToe
                     }
                 }
             }
-
             return (bestRow, bestCol);
         }
 
@@ -244,40 +244,58 @@ namespace TicTacToe
                 return Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[i, i] == symbol) ||
                        Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, THIRD_INDEX - i] == symbol);
             };
-
             return Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(0)).Any(i => checkLine(i, i)) || checkDiagonals();
         }
 
         public static char DifficultModeCheckWinner(char[,] board, char currentPlayer)
         {
-            // Check for three in a row horizontally and vertically
-            for (int i = 0; i < BOARD_ROW_DIM; i++)
+            // Check horizontal lines
+            for (int i = 0; i < board.GetLength(0); i++)
             {
-                // Check horizontal lines
-                if (board[i, 0] != ' ' && board[i, 0] == board[i, 1] && board[i, 1] == board[i, 2])
+                char winningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(j => (i, j)));
+                if (winningChar != ' ')
                 {
-                    return board[i, 0];
-                }
-
-                // Check vertical lines
-                if (board[0, i] != ' ' && board[0, i] == board[1, i] && board[1, i] == board[2, i])
-                {
-                    return board[0, i];
+                    return winningChar;
                 }
             }
-
-            // Check for three in a row diagonally
-            if (board[0, 0] != ' ' && board[0, 0] == board[1, 1] && board[1, 1] == board[2, 2])
+            // Check vertical lines
+            for (int j = 0; j < board.GetLength(0); j++)
             {
-                return board[0, 0];
+                char winningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, j)));
+                if (winningChar != ' ')
+                {
+                    return winningChar;
+                }
             }
-            if (board[0, 2] != ' ' && board[0, 2] == board[1, 1] && board[1, 1] == board[2, 0])
+            char diagonal1WinningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, i)));
+            if (diagonal1WinningChar != ' ')
             {
-                return board[0, 2];
+                return diagonal1WinningChar;
             }
-
+            char diagonal2WinningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, board.GetLength(0) - 1 - i)));
+            if (diagonal2WinningChar != ' ')
+            {
+                return diagonal2WinningChar;
+            }
             // No winner found
             return ' ';
+        }
+
+        static char CheckLine(char[,] board, IEnumerable<(int, int)> indices)
+        {
+            char firstChar = ' ';
+            foreach (var (i, j) in indices)
+            {
+                if (firstChar == ' ')
+                {
+                    firstChar = board[i, j];
+                }
+                else if (board[i, j] != firstChar)
+                {
+                    return ' '; // Not all characters in the line are the same
+                }
+            }
+            return firstChar; // All characters in the line are the same
         }
 
         public static bool IsBoardFull(char[,] board, char boardEmptySpace = ' ')
