@@ -6,145 +6,83 @@ namespace TicTacToe
 {
     public class Program
     {
-        const int BOARD_ROW_DIM = 3;
-        const int BOARD_COLUMN_DIM = 3;
-        const int ZERO_BASED_INDEX = 0;
-        const int THIRD_INDEX = 2;
-        const int COL_1 = 1;
-        const int COL_2 = 2;
-        const int COL_3 = 3;
-        const int ROW_1 = 1;
-        const int ROW_2 = 2;
-        const int ROW_3 = 3;
-        const int EASY_MODE = 1;
-        const int DIFFICULT_MODE = 2;
-        const char HUMAN_SYMBOL = 'X';
-        const char COMPUTER_SYMBOL = 'O';
-        const string PLAYER1 = "Human";
-        const string PLAYER2 = "Computer";
+        
 
         public static void Main(string[] args)
         {
-            
-            char boardEmptySpace = ' ';
-            char[,] board = new char[BOARD_ROW_DIM, BOARD_COLUMN_DIM];
+            char[,] board = new char[UIMethod.BOARD_ROW_DIM, UIMethod.BOARD_COLUMN_DIM];
             bool isPlayer1Turn = true;
             
+            UIMethod.DisplayWelcomeMessage();
+            int gameMode = UIMethod.GameModeChooser();
 
-            Console.WriteLine("Welcome to Tic Tac Toe. Please select your game mode:");
-            Console.Write($"EASY MODE = {EASY_MODE} and DIFFICULT MODE = {DIFFICULT_MODE} ({EASY_MODE}/{DIFFICULT_MODE})?:\t");
-            int gameMode = int.Parse(Console.ReadLine());
-            Console.WriteLine();
-
-            for (int row = ZERO_BASED_INDEX; row < board.GetLength(0); row++)
+            for (int row = UIMethod.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
             {
-                for (int col = ZERO_BASED_INDEX; col < board.GetLength(1); col++)
+                for (int col = UIMethod.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
                 {
-                    board[row, col] = boardEmptySpace;
+                    board[row, col] = UIMethod.BOARD_EMPTY_SPACE;
                 }
             }
 
-            PrintBoard(board);
+            UIMethod.PrintBoard(board);
 
             while (true)
             {
-                string currentPlayer = isPlayer1Turn ? PLAYER1 : PLAYER2;
-                Console.WriteLine($"It is {currentPlayer}'s turn:");
+                string currentPlayer = isPlayer1Turn ? UIMethod.PLAYER1 : UIMethod.PLAYER2;
+                UIMethod.DisplayCurrentPlayer(currentPlayer);
 
-                if (currentPlayer == PLAYER1)
+                if (currentPlayer == UIMethod.PLAYER1)
                 {
-                    Console.Write($"Enter row ({ROW_1}-{ROW_3}):\t");
-                    int row = int.Parse(Console.ReadLine()) - 1;
-
-                    Console.Write($"Enter column ({COL_1}-{COL_3}):\t");
-                    int col = int.Parse(Console.ReadLine()) - 1;
-
-                    try
-                    {
-                        HumanMove(board, row, col, HUMAN_SYMBOL);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
+                    UIMethod.HumanMoveCoodinates(board);
                 }
-                else if (currentPlayer == PLAYER2)
+                if (currentPlayer == UIMethod.PLAYER2)
                 {
-                    if (gameMode == EASY_MODE)
-                    {
-                        (int row, int col) = EasyComputerMove(board);
-                        board[row, col] = COMPUTER_SYMBOL;
-                    }
-                    else if (gameMode == DIFFICULT_MODE)
-                    {
-                        (int row, int col) = DifficultComputerMove(board);
-                        board[row, col] = COMPUTER_SYMBOL;
-                    }
+                    ComputerMoveDecider(board, gameMode);
                 }
 
-                PrintBoard(board);
-                if (EasyModeCheckWinner(board, HUMAN_SYMBOL))
+                UIMethod.PrintBoard(board);
+                if (EasyModeCheckWinner(board, UIMethod.HUMAN_SYMBOL))
                 {
-                    Console.WriteLine(PLAYER1 + " wins!");
+                    UIMethod.DisplayHumanWinner();
                     break;
                 }
-                if (EasyModeCheckWinner(board, COMPUTER_SYMBOL))
+                if (EasyModeCheckWinner(board, UIMethod.COMPUTER_SYMBOL))
                 {
-                    Console.WriteLine(PLAYER2 + " wins!");
+                    UIMethod.DisplayComputerWinner();
                     break;
                 }
                 if (IsBoardFull(board))
                 {
-                    Console.WriteLine("It's a draw!");
+                    UIMethod.DisplayDraw();
                     break;
                 }
                 isPlayer1Turn = !isPlayer1Turn;
             }
         }
 
-        public static void PrintBoard(char[,] board)
+        public static void ComputerMoveDecider(char[,] board, int gameMode)
         {
-            Console.WriteLine($"   {COL_1}   {COL_2}   {COL_3}");
-            Console.WriteLine(" -------------");
-            for (int row = ZERO_BASED_INDEX; row < board.GetLength(0); row++)
+            if (gameMode == UIMethod.EASY_MODE)
             {
-                Console.Write((row + 1) + "|");
-                for (int col = ZERO_BASED_INDEX; col < board.GetLength(1); col++)
-                {
-                    Console.Write($" {board[row, col]} ");
-                    if (col < THIRD_INDEX)
-                    {
-                        Console.Write("|");
-                    }
-                }
-                Console.WriteLine();
-                if (row < THIRD_INDEX)
-                {
-                    Console.WriteLine(" -------------");
-                }
+                (int row, int col) = EasyComputerMove(board);
+                board[row, col] = UIMethod.COMPUTER_SYMBOL;
+            }
+            if (gameMode == UIMethod.DIFFICULT_MODE)
+            {
+                (int row, int col) = DifficultComputerMove(board);
+                board[row, col] = UIMethod.COMPUTER_SYMBOL;
             }
         }
 
-        public static void HumanMove(char[,] board, int row, int col, char symbol, char boardEmptySpace = ' ')
-        {
-            if (row < ZERO_BASED_INDEX || row >= board.GetLength(0) || col < ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != boardEmptySpace)
-            {
-                throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
-            }
-
-            board[row, col] = symbol;
-        }
-
-        public static (int, int) EasyComputerMove(char[,] board, char boardEmptySpace = ' ')
+        public static (int, int) EasyComputerMove(char[,] board)
         {
             Random random = new Random();
             int row, col;
             do
             {
-                row = random.Next(ZERO_BASED_INDEX, BOARD_ROW_DIM);
-                col = random.Next(ZERO_BASED_INDEX, BOARD_COLUMN_DIM);
-            } while (board[row, col] != boardEmptySpace);
+                row = random.Next(UIMethod.ZERO_BASED_INDEX, UIMethod.BOARD_ROW_DIM);
+                col = random.Next(UIMethod.ZERO_BASED_INDEX, UIMethod.BOARD_COLUMN_DIM);
+            } while (board[row, col] != UIMethod.BOARD_EMPTY_SPACE);
 
             return (row, col);
         }
@@ -152,37 +90,37 @@ namespace TicTacToe
         public static (int, int) DifficultComputerMove(char[,] board)
         {
             int bestScore = int.MinValue;
-            int bestRow = -1;
-            int bestCol = -1;
-            char currentPlayerSymbol = COMPUTER_SYMBOL;
+            int bestRow = UIMethod.INITIAL_INVALID_VALUE;
+            int bestCol = UIMethod.INITIAL_INVALID_VALUE;
+            char currentPlayerSymbol = UIMethod.COMPUTER_SYMBOL;
 
             Func<char[,], char, int> evaluateScore = (currentBoard, currentPlayer) =>
             {
-                char winner = DifficultModeCheckWinner(currentBoard, currentPlayer);
-                if (winner == currentPlayerSymbol) return 10;
-                if (winner != ' ') return -10;
-                if (IsBoardFull(currentBoard)) return 0;
-                return 0;
+                char winner = DifficultModeCheckWinner(currentBoard);
+                if (winner == currentPlayerSymbol) return UIMethod.MINIMAX_WIN_SCORE;
+                if (winner != UIMethod.BOARD_EMPTY_SPACE) return UIMethod.MINIMAX_LOOSE_SCORE;
+                if (IsBoardFull(currentBoard)) return UIMethod.MINIMAX_DRAW_SCORE;
+                return UIMethod.MINIMAX_DRAW_SCORE;
             };
 
             Func<char[,], int, bool, int> minimax = null;
             minimax = (currentBoard, depth, isMaximizing) =>
             {
                 int score = evaluateScore(currentBoard, currentPlayerSymbol);
-                if (score != 0) return score - depth;
+                if (score != UIMethod.MINIMAX_DRAW_SCORE) return score - depth;
 
                 if (isMaximizing)
                 {
                     int maxScore = int.MinValue;
-                    for (int row = 0; row < currentBoard.GetLength(0); row++)
+                    for (int row = UIMethod.ZERO_BASED_INDEX; row < currentBoard.GetLength(0); row++)
                     {
-                        for (int col = 0; col < currentBoard.GetLength(1); col++)
+                        for (int col = UIMethod.ZERO_BASED_INDEX; col < currentBoard.GetLength(1); col++)
                         {
-                            if (currentBoard[row, col] == ' ')
+                            if (currentBoard[row, col] == UIMethod.BOARD_EMPTY_SPACE)
                             {
                                 currentBoard[row, col] = currentPlayerSymbol;
                                 int currentScore = minimax(currentBoard, depth + 1, false);
-                                currentBoard[row, col] = ' ';
+                                currentBoard[row, col] = UIMethod.BOARD_EMPTY_SPACE;
                                 maxScore = Math.Max(maxScore, currentScore);
                             }
                         }
@@ -192,16 +130,16 @@ namespace TicTacToe
                 else
                 {
                     int minScore = int.MaxValue;
-                    char opponentSymbol = (currentPlayerSymbol == 'X') ? 'O' : 'X';
-                    for (int row = 0; row < currentBoard.GetLength(0); row++)
+                    char opponentSymbol = (currentPlayerSymbol == UIMethod.HUMAN_SYMBOL) ? UIMethod.COMPUTER_SYMBOL : UIMethod.HUMAN_SYMBOL;
+                    for (int row = UIMethod.ZERO_BASED_INDEX; row < currentBoard.GetLength(0); row++)
                     {
-                        for (int col = 0; col < currentBoard.GetLength(1); col++)
+                        for (int col = UIMethod.ZERO_BASED_INDEX; col < currentBoard.GetLength(1); col++)
                         {
-                            if (currentBoard[row, col] == ' ')
+                            if (currentBoard[row, col] == UIMethod.BOARD_EMPTY_SPACE)
                             {
                                 currentBoard[row, col] = opponentSymbol;
                                 int currentScore = minimax(currentBoard, depth + 1, true);
-                                currentBoard[row, col] = ' ';
+                                currentBoard[row, col] = UIMethod.BOARD_EMPTY_SPACE;
                                 minScore = Math.Min(minScore, currentScore);
                             }
                         }
@@ -210,15 +148,15 @@ namespace TicTacToe
                 }
             };
 
-            for (int row = 0; row < board.GetLength(0); row++)
+            for (int row = UIMethod.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
             {
-                for (int col = 0; col < board.GetLength(1); col++)
+                for (int col = UIMethod.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
                 {
-                    if (board[row, col] == ' ')
+                    if (board[row, col] == UIMethod.BOARD_EMPTY_SPACE)
                     {
                         board[row, col] = currentPlayerSymbol;
-                        int score = minimax(board, 0, false);
-                        board[row, col] = ' ';
+                        int score = minimax(board, UIMethod.MINIMAX_DRAW_SCORE, false);
+                        board[row, col] = UIMethod.BOARD_EMPTY_SPACE;
                         if (score > bestScore)
                         {
                             bestScore = score;
@@ -235,74 +173,74 @@ namespace TicTacToe
         {
             Func<int, int, bool> checkLine = (x, y) =>
             {
-                return Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[x, i] == symbol) ||
-                       Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, y] == symbol);
+                return Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[x, i] == symbol) ||
+                       Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, y] == symbol);
             };
 
             Func<bool> checkDiagonals = () =>
             {
-                return Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[i, i] == symbol) ||
-                       Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, THIRD_INDEX - i] == symbol);
+                return Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[i, i] == symbol) ||
+                       Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, UIMethod.THIRD_INDEX - i] == symbol);
             };
-            return Enumerable.Range(ZERO_BASED_INDEX, board.GetLength(0)).Any(i => checkLine(i, i)) || checkDiagonals();
+            return Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).Any(i => checkLine(i, i)) || checkDiagonals();
         }
 
-        public static char DifficultModeCheckWinner(char[,] board, char currentPlayer)
+        public static char DifficultModeCheckWinner(char[,] board)
         {
             // Check horizontal lines
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int i = UIMethod.ZERO_BASED_INDEX; i < board.GetLength(0); i++)
             {
-                char winningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(j => (i, j)));
-                if (winningChar != ' ')
+                char winningChar = CheckLine(board, Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).Select(j => (i, j)));
+                if (winningChar != UIMethod.BOARD_EMPTY_SPACE)
                 {
                     return winningChar;
                 }
             }
             // Check vertical lines
-            for (int j = 0; j < board.GetLength(0); j++)
+            for (int j = UIMethod.ZERO_BASED_INDEX; j < board.GetLength(0); j++)
             {
-                char winningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, j)));
-                if (winningChar != ' ')
+                char winningChar = CheckLine(board, Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).Select(i => (i, j)));
+                if (winningChar != UIMethod.BOARD_EMPTY_SPACE)
                 {
                     return winningChar;
                 }
             }
-            char diagonal1WinningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, i)));
-            if (diagonal1WinningChar != ' ')
+            char diagonal1WinningChar = CheckLine(board, Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).Select(i => (i, i)));
+            if (diagonal1WinningChar != UIMethod.BOARD_EMPTY_SPACE)
             {
                 return diagonal1WinningChar;
             }
-            char diagonal2WinningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, board.GetLength(0) - 1 - i)));
-            if (diagonal2WinningChar != ' ')
+            char diagonal2WinningChar = CheckLine(board, Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).Select(i => (i, board.GetLength(0) - 1 - i)));
+            if (diagonal2WinningChar != UIMethod.BOARD_EMPTY_SPACE)
             {
                 return diagonal2WinningChar;
             }
             // No winner found
-            return ' ';
+            return UIMethod.BOARD_EMPTY_SPACE;
         }
 
         static char CheckLine(char[,] board, IEnumerable<(int, int)> indices)
         {
-            char firstChar = ' ';
+            char firstChar = UIMethod.BOARD_EMPTY_SPACE;
             foreach (var (i, j) in indices)
             {
-                if (firstChar == ' ')
+                if (firstChar == UIMethod.BOARD_EMPTY_SPACE)
                 {
                     firstChar = board[i, j];
                 }
                 else if (board[i, j] != firstChar)
                 {
-                    return ' '; // Not all characters in the line are the same
+                    return UIMethod.BOARD_EMPTY_SPACE; // Not all characters in the line are the same
                 }
             }
             return firstChar; // All characters in the line are the same
         }
 
-        public static bool IsBoardFull(char[,] board, char boardEmptySpace = ' ')
+        public static bool IsBoardFull(char[,] board)
         {
             foreach (char cell in board)
             {
-                if (cell == boardEmptySpace)
+                if (cell == UIMethod.BOARD_EMPTY_SPACE)
                 {
                     return false;
                 }
