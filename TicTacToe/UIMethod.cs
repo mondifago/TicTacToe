@@ -25,8 +25,8 @@ namespace TicTacToe
         public const int DIFFICULT_MODE = 2;
         public const char HUMAN_SYMBOL = 'X';
         public const char COMPUTER_SYMBOL = 'O';
-        public const string PLAYER1 = "Human";
-        public const string PLAYER2 = "Computer";
+        public const string HUMAN_PLAYER = "Human";
+        public const string COMPUTER_PLAYER = "Computer";
         public const char BOARD_EMPTY_SPACE = ' ';
 
         public static void DisplayWelcomeMessage()
@@ -37,10 +37,43 @@ namespace TicTacToe
 
         public static int ChooseGameMode()
         {
-            int gameMode = int.Parse(Console.ReadLine());
+            int gameMode = 0;
+            bool validInput = false;
+
+            do
+            {
+                try
+                {
+                    gameMode = int.Parse(Console.ReadLine());
+
+                    if (gameMode == 1 || gameMode == 2)
+                    {
+                        validInput = true;
+                    }
+                    else
+                    {
+                        Console.Write("Please enter either 1 or 2:\t");
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.Write("Please enter a valid number (1 / 2):\t");
+                }
+                catch (OverflowException)
+                {
+                    Console.Write("Please enter a valid number within the range of integers:\t");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+
+            } while (!validInput);
+
             Console.WriteLine();
             return gameMode;
         }
+
 
         public static (int, int) GetCoordinatesForHumanMove(char[,] board)
         {
@@ -48,13 +81,23 @@ namespace TicTacToe
             while (true)
             {
                 Console.Write($"Enter row ({ROW_1}-{ROW_3}):\t");
-                row = int.Parse(Console.ReadLine()) - 1;
+                if (!int.TryParse(Console.ReadLine(), out row))
+                {
+                    Console.WriteLine("Invalid input! Please enter a valid integer.");
+                    continue;
+                }
+                row--; 
 
                 Console.Write($"Enter column ({COL_1}-{COL_3}):\t");
-                col = int.Parse(Console.ReadLine()) - 1;
+                if (!int.TryParse(Console.ReadLine(), out col))
+                {
+                    Console.WriteLine("Invalid input! Please enter a valid integer.");
+                    continue;
+                }
+                col--; 
 
                 try
-                { 
+                {
                     HumanMakeMove(board, row, col, HUMAN_SYMBOL);
                     break;
                 }
@@ -73,8 +116,10 @@ namespace TicTacToe
             {
                 throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
             }
+
             board[row, col] = symbol;
         }
+
 
         public static void PrintBoard(char[,] board)
         {
@@ -107,12 +152,12 @@ namespace TicTacToe
 
         public static void DisplayThatHumanHasWon()
         {
-            Console.WriteLine(PLAYER1 + " wins!");
+            Console.WriteLine(HUMAN_PLAYER + " wins!");
         }
 
         public static void DisplayThatComputerHasWon()
         {
-            Console.WriteLine(PLAYER2 + " wins!");
+            Console.WriteLine(COMPUTER_PLAYER + " wins!");
         }
 
         public static void DisplayDraw()

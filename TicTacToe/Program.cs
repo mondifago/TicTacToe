@@ -28,14 +28,14 @@ namespace TicTacToe
 
             while (true)
             {
-                string currentPlayer = isPlayer1Turn ? UIMethod.PLAYER1 : UIMethod.PLAYER2;
+                string currentPlayer = isPlayer1Turn ? UIMethod.HUMAN_PLAYER : UIMethod.COMPUTER_PLAYER;
                 UIMethod.DisplayCurrentPlayer(currentPlayer);
 
-                if (currentPlayer == UIMethod.PLAYER1)
+                if (currentPlayer == UIMethod.HUMAN_PLAYER)
                 {
                     UIMethod.GetCoordinatesForHumanMove(board);
                 }
-                if (currentPlayer == UIMethod.PLAYER2)
+                if (currentPlayer == UIMethod.COMPUTER_PLAYER)
                 {
                     ComputerDecidesMoveBasedOnGameMode(board, gameMode);
                 }
