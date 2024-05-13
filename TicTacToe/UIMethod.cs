@@ -35,14 +35,14 @@ namespace TicTacToe
             Console.Write($"EASY MODE = {EASY_MODE} and DIFFICULT MODE = {DIFFICULT_MODE} ({EASY_MODE}/{DIFFICULT_MODE})?:\t");
         }
 
-        public static int GameModeChooser()
+        public static int ChooseGameMode()
         {
             int gameMode = int.Parse(Console.ReadLine());
             Console.WriteLine();
             return gameMode;
         }
 
-        public static (int, int) HumanMoveCoodinates(char[,] board)
+        public static (int, int) GetCoordinatesForHumanMove(char[,] board)
         {
             int row, col;
             while (true)
@@ -55,7 +55,7 @@ namespace TicTacToe
 
                 try
                 { 
-                    HumanMove(board, row, col, HUMAN_SYMBOL);
+                    HumanMakeMove(board, row, col, HUMAN_SYMBOL);
                     break;
                 }
                 catch (Exception ex)
@@ -67,7 +67,7 @@ namespace TicTacToe
             return (row, col);
         }
 
-        public static void HumanMove(char[,] board, int row, int col, char symbol)
+        public static void HumanMakeMove(char[,] board, int row, int col, char symbol)
         {
             if (row < ZERO_BASED_INDEX || row >= board.GetLength(0) || col < ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != BOARD_EMPTY_SPACE)
             {
@@ -105,12 +105,12 @@ namespace TicTacToe
             Console.WriteLine($"It is {currentPlayer}'s turn:");
         }
 
-        public static void DisplayHumanWinner()
+        public static void DisplayThatHumanHasWon()
         {
             Console.WriteLine(PLAYER1 + " wins!");
         }
 
-        public static void DisplayComputerWinner()
+        public static void DisplayThatComputerHasWon()
         {
             Console.WriteLine(PLAYER2 + " wins!");
         }

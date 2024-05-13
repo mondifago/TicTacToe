@@ -14,7 +14,7 @@ namespace TicTacToe
             bool isPlayer1Turn = true;
             
             UIMethod.DisplayWelcomeMessage();
-            int gameMode = UIMethod.GameModeChooser();
+            int gameMode = UIMethod.ChooseGameMode();
 
             for (int row = UIMethod.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
             {
@@ -33,22 +33,23 @@ namespace TicTacToe
 
                 if (currentPlayer == UIMethod.PLAYER1)
                 {
-                    UIMethod.HumanMoveCoodinates(board);
+                    UIMethod.GetCoordinatesForHumanMove(board);
                 }
                 if (currentPlayer == UIMethod.PLAYER2)
                 {
-                    ComputerMoveDecider(board, gameMode);
+                    ComputerDecidesMoveBasedOnGameMode(board, gameMode);
                 }
 
                 UIMethod.PrintBoard(board);
-                if (EasyModeCheckWinner(board, UIMethod.HUMAN_SYMBOL))
+
+                if (CheckForTheWinningPlayer(board, UIMethod.HUMAN_SYMBOL))
                 {
-                    UIMethod.DisplayHumanWinner();
+                    UIMethod.DisplayThatHumanHasWon();
                     break;
                 }
-                if (EasyModeCheckWinner(board, UIMethod.COMPUTER_SYMBOL))
+                if (CheckForTheWinningPlayer(board, UIMethod.COMPUTER_SYMBOL))
                 {
-                    UIMethod.DisplayComputerWinner();
+                    UIMethod.DisplayThatComputerHasWon();
                     break;
                 }
                 if (IsBoardFull(board))
@@ -60,21 +61,21 @@ namespace TicTacToe
             }
         }
 
-        public static void ComputerMoveDecider(char[,] board, int gameMode)
+        public static void ComputerDecidesMoveBasedOnGameMode(char[,] board, int gameMode)
         {
             if (gameMode == UIMethod.EASY_MODE)
             {
-                (int row, int col) = EasyComputerMove(board);
+                (int row, int col) = ComputerMakeMoveBasedOnEasyMode(board);
                 board[row, col] = UIMethod.COMPUTER_SYMBOL;
             }
             if (gameMode == UIMethod.DIFFICULT_MODE)
             {
-                (int row, int col) = DifficultComputerMove(board);
+                (int row, int col) = ComputerMakeMoveBasedOnDifficultMode(board);
                 board[row, col] = UIMethod.COMPUTER_SYMBOL;
             }
         }
 
-        public static (int, int) EasyComputerMove(char[,] board)
+        public static (int, int) ComputerMakeMoveBasedOnEasyMode(char[,] board)
         {
             Random random = new Random();
             int row, col;
@@ -87,7 +88,7 @@ namespace TicTacToe
             return (row, col);
         }
 
-        public static (int, int) DifficultComputerMove(char[,] board)
+        public static (int, int) ComputerMakeMoveBasedOnDifficultMode(char[,] board)
         {
             int bestScore = int.MinValue;
             int bestRow = UIMethod.INITIAL_INVALID_VALUE;
@@ -96,7 +97,7 @@ namespace TicTacToe
 
             Func<char[,], char, int> evaluateScore = (currentBoard, currentPlayer) =>
             {
-                char winner = DifficultModeCheckWinner(currentBoard);
+                char winner = CheckForTheWinningSymbol(currentBoard);
                 if (winner == currentPlayerSymbol) return UIMethod.MINIMAX_WIN_SCORE;
                 if (winner != UIMethod.BOARD_EMPTY_SPACE) return UIMethod.MINIMAX_LOOSE_SCORE;
                 if (IsBoardFull(currentBoard)) return UIMethod.MINIMAX_DRAW_SCORE;
@@ -169,7 +170,7 @@ namespace TicTacToe
             return (bestRow, bestCol);
         }
 
-        public static bool EasyModeCheckWinner(char[,] board, char symbol)
+        public static bool CheckForTheWinningPlayer(char[,] board, char symbol)
         {
             Func<int, int, bool> checkLine = (x, y) =>
             {
@@ -185,7 +186,7 @@ namespace TicTacToe
             return Enumerable.Range(UIMethod.ZERO_BASED_INDEX, board.GetLength(0)).Any(i => checkLine(i, i)) || checkDiagonals();
         }
 
-        public static char DifficultModeCheckWinner(char[,] board)
+        public static char CheckForTheWinningSymbol(char[,] board)
         {
             // Check horizontal lines
             for (int i = UIMethod.ZERO_BASED_INDEX; i < board.GetLength(0); i++)
