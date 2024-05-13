@@ -3,36 +3,12 @@ using System.Drawing;
 
 namespace TicTacToe
 {
-    
-
-    public static class UIMethod
+    public static class UIMethods
 	{
-        public const int INITIAL_INVALID_VALUE = -1;
-        public const int MINIMAX_WIN_SCORE = 10;
-        public const int MINIMAX_LOOSE_SCORE = -10;
-        public const int MINIMAX_DRAW_SCORE = 0;
-        public const int BOARD_ROW_DIM = 3;
-        public const int BOARD_COLUMN_DIM = 3;
-        public const int ZERO_BASED_INDEX = 0;
-        public const int THIRD_INDEX = 2;
-        public const int COL_1 = 1;
-        public const int COL_2 = 2;
-        public const int COL_3 = 3;
-        public const int ROW_1 = 1;
-        public const int ROW_2 = 2;
-        public const int ROW_3 = 3;
-        public const int EASY_MODE = 1;
-        public const int DIFFICULT_MODE = 2;
-        public const char HUMAN_SYMBOL = 'X';
-        public const char COMPUTER_SYMBOL = 'O';
-        public const string HUMAN_PLAYER = "Human";
-        public const string COMPUTER_PLAYER = "Computer";
-        public const char BOARD_EMPTY_SPACE = ' ';
-
         public static void DisplayWelcomeMessage()
 		{
-            Console.WriteLine("Welcome to Tic Tac Toe. Please select your game mode:");
-            Console.Write($"EASY MODE = {EASY_MODE} and DIFFICULT MODE = {DIFFICULT_MODE} ({EASY_MODE}/{DIFFICULT_MODE})?:\t");
+            Console.WriteLine(TTTConstants.WELCOME_MESSAGE);
+            Console.Write($"EASY MODE = {TTTConstants.EASY_MODE} and DIFFICULT MODE = {TTTConstants.DIFFICULT_MODE} ({TTTConstants.EASY_MODE}/{TTTConstants.DIFFICULT_MODE})?:\t");
         }
 
         public static int ChooseGameMode()
@@ -52,16 +28,16 @@ namespace TicTacToe
                     }
                     else
                     {
-                        Console.Write("Please enter either 1 or 2:\t");
+                        Console.Write(TTTConstants.OUT_OF_RANGE_MESSAGE);
                     }
                 }
                 catch (FormatException)
                 {
-                    Console.Write("Please enter a valid number (1 / 2):\t");
+                    Console.Write(TTTConstants.OUT_OF_FORMAT_MESSAGE);
                 }
                 catch (OverflowException)
                 {
-                    Console.Write("Please enter a valid number within the range of integers:\t");
+                    Console.Write(TTTConstants.OUT_OF_RANGE_MESSAGE);
                 }
                 catch (Exception ex)
                 {
@@ -74,31 +50,30 @@ namespace TicTacToe
             return gameMode;
         }
 
-
         public static (int, int) GetCoordinatesForHumanMove(char[,] board)
         {
             int row, col;
             while (true)
             {
-                Console.Write($"Enter row ({ROW_1}-{ROW_3}):\t");
+                Console.Write($"Enter row ({TTTConstants.ROW_1}-{TTTConstants.ROW_3}):\t");
                 if (!int.TryParse(Console.ReadLine(), out row))
                 {
-                    Console.WriteLine("Invalid input! Please enter a valid integer.");
+                    Console.WriteLine(TTTConstants.WRONG_FORMAT_MESSAGE);
                     continue;
                 }
                 row--; 
 
-                Console.Write($"Enter column ({COL_1}-{COL_3}):\t");
+                Console.Write($"Enter column ({TTTConstants.COL_1}-{TTTConstants.COL_3}):\t");
                 if (!int.TryParse(Console.ReadLine(), out col))
                 {
-                    Console.WriteLine("Invalid input! Please enter a valid integer.");
+                    Console.WriteLine(TTTConstants.WRONG_FORMAT_MESSAGE);
                     continue;
                 }
                 col--; 
 
                 try
                 {
-                    HumanMakeMove(board, row, col, HUMAN_SYMBOL);
+                    HumanMakeMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
                     break;
                 }
                 catch (Exception ex)
@@ -112,32 +87,31 @@ namespace TicTacToe
 
         public static void HumanMakeMove(char[,] board, int row, int col, char symbol)
         {
-            if (row < ZERO_BASED_INDEX || row >= board.GetLength(0) || col < ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != BOARD_EMPTY_SPACE)
+            if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
             {
-                throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
+                throw new InvalidOperationException(TTTConstants.CHOOSE_VALID_CELL);
             }
 
             board[row, col] = symbol;
         }
 
-
         public static void PrintBoard(char[,] board)
         {
-            Console.WriteLine($"   {COL_1}   {COL_2}   {COL_3}");
+            Console.WriteLine($"   {TTTConstants.COL_1}   {TTTConstants.COL_2}   {TTTConstants.COL_3}");
             Console.WriteLine(" -------------");
-            for (int row = ZERO_BASED_INDEX; row < board.GetLength(0); row++)
+            for (int row = TTTConstants.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
             {
                 Console.Write((row + 1) + "|");
-                for (int col = ZERO_BASED_INDEX; col < board.GetLength(1); col++)
+                for (int col = TTTConstants.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
                 {
                     Console.Write($" {board[row, col]} ");
-                    if (col < THIRD_INDEX)
+                    if (col < TTTConstants.THIRD_INDEX)
                     {
                         Console.Write("|");
                     }
                 }
                 Console.WriteLine();
-                if (row < THIRD_INDEX)
+                if (row < TTTConstants.THIRD_INDEX)
                 {
                     Console.WriteLine(" -------------");
                 }
@@ -152,12 +126,12 @@ namespace TicTacToe
 
         public static void DisplayThatHumanHasWon()
         {
-            Console.WriteLine(HUMAN_PLAYER + " wins!");
+            Console.WriteLine(TTTConstants.HUMAN_PLAYER + " wins!");
         }
 
         public static void DisplayThatComputerHasWon()
         {
-            Console.WriteLine(COMPUTER_PLAYER + " wins!");
+            Console.WriteLine(TTTConstants.COMPUTER_PLAYER + " wins!");
         }
 
         public static void DisplayDraw()
