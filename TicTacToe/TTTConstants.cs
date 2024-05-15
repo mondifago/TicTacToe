@@ -24,11 +24,6 @@ namespace TicTacToe
         public const char BOARD_EMPTY_SPACE = ' ';
         public const string HUMAN_PLAYER = "Human";
         public const string COMPUTER_PLAYER = "Computer";
-        public const string WELCOME_MESSAGE = "Welcome to Tic Tac Toe. Please select your game mode:";
-        public const string CHOOSE_VALID_CELL = "Invalid move! Please choose an empty cell.";
-        public const string WRONG_FORMAT_MESSAGE = "Invalid input! Please enter a valid integer.";
-        public const string OUT_OF_RANGE_MESSAGE = "Please enter either 1 or 2:\t";
-        public const string OUT_OF_FORMAT_MESSAGE = "Please enter a valid number (1 / 2):\t";
     }
 }
 

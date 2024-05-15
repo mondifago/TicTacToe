@@ -7,7 +7,7 @@ namespace TicTacToe
 	{
         public static void DisplayWelcomeMessage()
 		{
-            Console.WriteLine(TTTConstants.WELCOME_MESSAGE);
+            Console.WriteLine("Welcome to Tic Tac Toe. Please select your game mode:");
             Console.Write($"EASY MODE = {TTTConstants.EASY_MODE} and DIFFICULT MODE = {TTTConstants.DIFFICULT_MODE} ({TTTConstants.EASY_MODE}/{TTTConstants.DIFFICULT_MODE})?:\t");
         }
 
@@ -28,16 +28,16 @@ namespace TicTacToe
                     }
                     else
                     {
-                        Console.Write(TTTConstants.OUT_OF_RANGE_MESSAGE);
+                        Console.Write("Please enter either 1 or 2:\t");
                     }
                 }
                 catch (FormatException)
                 {
-                    Console.Write(TTTConstants.OUT_OF_FORMAT_MESSAGE);
+                    Console.Write("Please enter a valid number (1 / 2):\t");
                 }
                 catch (OverflowException)
                 {
-                    Console.Write(TTTConstants.OUT_OF_RANGE_MESSAGE);
+                    Console.Write("Please enter either 1 or 2:\t");
                 }
                 catch (Exception ex)
                 {
@@ -58,7 +58,7 @@ namespace TicTacToe
                 Console.Write($"Enter row ({TTTConstants.ROW_1}-{TTTConstants.ROW_3}):\t");
                 if (!int.TryParse(Console.ReadLine(), out row))
                 {
-                    Console.WriteLine(TTTConstants.WRONG_FORMAT_MESSAGE);
+                    Console.WriteLine("Invalid input! Please enter a valid integer.");
                     continue;
                 }
                 row--; 
@@ -66,7 +66,7 @@ namespace TicTacToe
                 Console.Write($"Enter column ({TTTConstants.COL_1}-{TTTConstants.COL_3}):\t");
                 if (!int.TryParse(Console.ReadLine(), out col))
                 {
-                    Console.WriteLine(TTTConstants.WRONG_FORMAT_MESSAGE);
+                    Console.WriteLine("Invalid input! Please enter a valid integer.");
                     continue;
                 }
                 col--; 
@@ -89,7 +89,7 @@ namespace TicTacToe
         {
             if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
             {
-                throw new InvalidOperationException(TTTConstants.CHOOSE_VALID_CELL);
+                throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
             }
 
             board[row, col] = symbol;
