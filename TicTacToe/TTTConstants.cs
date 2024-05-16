@@ -24,6 +24,7 @@ namespace TicTacToe
         public const char BOARD_EMPTY_SPACE = ' ';
         public const string HUMAN_PLAYER = "Human";
         public const string COMPUTER_PLAYER = "Computer";
+        public const string VERTICAL_LINE = "|";
     }
 }
 

@@ -18,34 +18,31 @@ namespace TicTacToe
 
             do
             {
-                try
-                {
-                    gameMode = int.Parse(Console.ReadLine());
+                string userInput = Console.ReadLine();
 
-                    if (gameMode == 1 || gameMode == 2)
+                if (string.IsNullOrWhiteSpace(userInput))
+                {
+                    Console.Write("Please type in something:\t");
+                }
+                else
+                {
+                    if (int.TryParse(userInput, out gameMode))
                     {
-                        validInput = true;
+                        if (gameMode == TTTConstants.EASY_MODE || gameMode == TTTConstants.DIFFICULT_MODE)
+                        {
+                            validInput = true;
+                        }
+                        else
+                        {
+                            Console.Write($"Please enter either {TTTConstants.EASY_MODE} or {TTTConstants.DIFFICULT_MODE}:\t");
+                        }
                     }
                     else
                     {
-                        Console.Write("Please enter either 1 or 2:\t");
+                        Console.Write($"Please enter a valid number ({TTTConstants.EASY_MODE} / {TTTConstants.DIFFICULT_MODE}):\t");
                     }
                 }
-                catch (FormatException)
-                {
-                    Console.Write("Please enter a valid number (1 / 2):\t");
-                }
-                catch (OverflowException)
-                {
-                    Console.Write("Please enter either 1 or 2:\t");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                }
-
             } while (!validInput);
-
             Console.WriteLine();
             return gameMode;
         }
@@ -56,20 +53,10 @@ namespace TicTacToe
             while (true)
             {
                 Console.Write($"Enter row ({TTTConstants.ROW_1}-{TTTConstants.ROW_3}):\t");
-                if (!int.TryParse(Console.ReadLine(), out row))
-                {
-                    Console.WriteLine("Invalid input! Please enter a valid integer.");
-                    continue;
-                }
-                row--; 
+                row = GetValidInput();
 
                 Console.Write($"Enter column ({TTTConstants.COL_1}-{TTTConstants.COL_3}):\t");
-                if (!int.TryParse(Console.ReadLine(), out col))
-                {
-                    Console.WriteLine("Invalid input! Please enter a valid integer.");
-                    continue;
-                }
-                col--; 
+                col = GetValidInput();
 
                 try
                 {
@@ -83,6 +70,29 @@ namespace TicTacToe
                 }
             }
             return (row, col);
+        }
+
+        public static int GetValidInput()
+        {
+            int input;
+            do
+            {
+                if (!int.TryParse(Console.ReadLine(), out input))
+                {
+                    Console.Write("Invalid input! Please enter a valid integer:\t");
+                    continue;
+                }
+                input--;
+                if (input < TTTConstants.ZERO_BASED_INDEX || input > TTTConstants.THIRD_INDEX) 
+                {
+                    Console.Write($"Input out of range! Please enter a number between {TTTConstants.ROW_1} and {TTTConstants.ROW_3}:\t");
+                    continue;
+                }
+                break;
+
+            } while (true);
+
+            return input;
         }
 
         public static void HumanMakeMove(char[,] board, int row, int col, char symbol)
@@ -101,13 +111,13 @@ namespace TicTacToe
             Console.WriteLine(" -------------");
             for (int row = TTTConstants.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
             {
-                Console.Write((row + 1) + "|");
+                Console.Write((row + 1) + TTTConstants.VERTICAL_LINE);
                 for (int col = TTTConstants.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
                 {
                     Console.Write($" {board[row, col]} ");
                     if (col < TTTConstants.THIRD_INDEX)
                     {
-                        Console.Write("|");
+                        Console.Write(TTTConstants.VERTICAL_LINE);
                     }
                 }
                 Console.WriteLine();
