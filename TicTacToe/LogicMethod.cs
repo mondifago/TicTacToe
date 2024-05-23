@@ -44,8 +44,8 @@ namespace TicTacToe
             int row, col;
             do
             {
-                row = random.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_ROW_DIM);
-                col = random.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_COLUMN_DIM);
+                row = random.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
+                col = random.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
             } while (board[row, col] != TTTConstants.BOARD_EMPTY_SPACE);
 
             return (row, col);

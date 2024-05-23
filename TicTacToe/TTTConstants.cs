@@ -7,8 +7,7 @@ namespace TicTacToe
         public const int MINIMAX_WIN_SCORE = 10;
         public const int MINIMAX_LOOSE_SCORE = -10;
         public const int MINIMAX_DRAW_SCORE = 0;
-        public const int BOARD_ROW_DIM = 3;
-        public const int BOARD_COLUMN_DIM = 3;
+        public const int BOARD_DIMENSION = 3;
         public const int ZERO_BASED_INDEX = 0;
         public const int THIRD_INDEX = 2;
         public const int COL_1 = 1;

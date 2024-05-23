@@ -8,7 +8,7 @@ namespace TicTacToe
     {
         public static void Main(string[] args)
         {
-            char[,] board = new char[TTTConstants.BOARD_ROW_DIM, TTTConstants.BOARD_COLUMN_DIM];
+            char[,] board = new char[TTTConstants.BOARD_DIMENSION, TTTConstants.BOARD_DIMENSION];
             bool isPlayer1Turn = true;
             
             UIMethods.DisplayWelcomeMessage();
