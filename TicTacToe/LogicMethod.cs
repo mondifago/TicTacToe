@@ -19,6 +19,7 @@ namespace TicTacToe
             if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
             {
                 throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
+                
             }
 
             board[row, col] = symbol;

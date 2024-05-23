@@ -26,7 +26,22 @@ namespace TicTacToe
 
                 if (currentPlayer == TTTConstants.HUMAN_PLAYER)
                 {
-                    UIMethods.GetCoordinatesForHumanMove(board);
+                    bool validMove = false;
+                    while (!validMove)
+                    {
+                        (int row, int col) = UIMethods.GetCoordinatesForHumanMove();
+                        //now make human move
+                        try
+                        {
+                            LogicMethod.HumanMakeMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
+                            validMove = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+
                 }
                 if (currentPlayer == TTTConstants.COMPUTER_PLAYER)
                 {

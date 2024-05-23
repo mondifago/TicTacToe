@@ -46,29 +46,17 @@ namespace TicTacToe
             Console.WriteLine();
             return gameMode;
         }
-
-        public static (int, int) GetCoordinatesForHumanMove(char[,] board)
+       
+        public static (int, int) GetCoordinatesForHumanMove()
         {
             int row, col;
-            while (true)
-            {
+       
                 Console.Write($"Enter row ({TTTConstants.ROW_1}-{TTTConstants.ROW_3}):\t");
                 row = GetValidInput();
 
                 Console.Write($"Enter column ({TTTConstants.COL_1}-{TTTConstants.COL_3}):\t");
                 col = GetValidInput();
 
-                try
-                {
-                    LogicMethod.HumanMakeMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    continue;
-                }
-            }
             return (row, col);
         }
 
