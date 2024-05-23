@@ -14,6 +14,16 @@ namespace TicTacToe
             }
         }
 
+        public static void HumanMakeMove(char[,] board, int row, int col, char symbol)
+        {
+            if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
+            {
+                throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
+            }
+
+            board[row, col] = symbol;
+        }
+
         public static void ComputerDecidesMoveBasedOnGameMode(char[,] board, int gameMode)
         {
             if (gameMode == TTTConstants.EASY_MODE)

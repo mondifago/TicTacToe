@@ -60,7 +60,7 @@ namespace TicTacToe
 
                 try
                 {
-                    HumanMakeMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
+                    LogicMethod.HumanMakeMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
                     break;
                 }
                 catch (Exception ex)
@@ -93,16 +93,6 @@ namespace TicTacToe
             } while (true);
 
             return input;
-        }
-
-        public static void HumanMakeMove(char[,] board, int row, int col, char symbol)
-        {
-            if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
-            {
-                throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
-            }
-
-            board[row, col] = symbol;
         }
 
         public static void PrintBoard(char[,] board)
