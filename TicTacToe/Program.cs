@@ -30,7 +30,7 @@ namespace TicTacToe
                 }
                 if (currentPlayer == TTTConstants.COMPUTER_PLAYER)
                 {
-                    LogicMethod.ComputerDecidesMoveBasedOnGameMode(board, gameMode);
+                    LogicMethod.DecideComputerMoveBasedOnGameMode(board, gameMode);
                 }
 
                 UIMethods.PrintBoard(board);

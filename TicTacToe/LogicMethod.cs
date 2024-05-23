@@ -24,21 +24,21 @@ namespace TicTacToe
             board[row, col] = symbol;
         }
 
-        public static void ComputerDecidesMoveBasedOnGameMode(char[,] board, int gameMode)
+        public static void DecideComputerMoveBasedOnGameMode(char[,] board, int gameMode)
         {
             if (gameMode == TTTConstants.EASY_MODE)
             {
-                (int row, int col) = ComputerMakeMoveBasedOnEasyMode(board);
+                (int row, int col) = MakeComputerMoveBasedOnEasyMode(board);
                 board[row, col] = TTTConstants.COMPUTER_SYMBOL;
             }
             if (gameMode == TTTConstants.DIFFICULT_MODE)
             {
-                (int row, int col) = ComputerMakeMoveBasedOnDifficultMode(board);
+                (int row, int col) = MakeComputerMoveBasedOnDifficultMode(board);
                 board[row, col] = TTTConstants.COMPUTER_SYMBOL;
             }
         }
 
-        public static (int, int) ComputerMakeMoveBasedOnEasyMode(char[,] board)
+        public static (int, int) MakeComputerMoveBasedOnEasyMode(char[,] board)
         {
             Random random = new Random();
             int row, col;
@@ -51,7 +51,7 @@ namespace TicTacToe
             return (row, col);
         }
 
-        public static (int, int) ComputerMakeMoveBasedOnDifficultMode(char[,] board)
+        public static (int, int) MakeComputerMoveBasedOnDifficultMode(char[,] board)
         {
             int bestScore = int.MinValue;
             int bestRow = TTTConstants.INITIAL_INVALID_VALUE;
