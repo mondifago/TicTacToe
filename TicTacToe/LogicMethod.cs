@@ -1,7 +1,17 @@
 ﻿using System;
 namespace TicTacToe
 {
-	public static class LogicMethod
+    public static class RandomClass
+    {
+        private static readonly Random RANDOM = new Random();
+
+        public static Random RandomInstance
+        {
+            get { return RANDOM; }
+        }
+    }
+
+    public static class LogicMethod
 	{
         public static void InitializeBoard(char[,] board)
         {
@@ -41,12 +51,11 @@ namespace TicTacToe
 
         public static (int, int) MakeComputerMoveBasedOnEasyMode(char[,] board)
         {
-            Random random = new Random();
             int row, col;
             do
             {
-                row = random.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
-                col = random.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
+                row = RandomClass.RandomInstance.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
+                col = RandomClass.RandomInstance.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
             } while (board[row, col] != TTTConstants.BOARD_EMPTY_SPACE);
 
             return (row, col);
