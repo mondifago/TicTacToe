@@ -33,7 +33,7 @@ namespace TicTacToe
                         //now make human move
                         try
                         {
-                            LogicMethod.HumanMakeMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
+                            LogicMethod.MakeHumanMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
                             validMove = true;
                         }
                         catch (Exception ex)
@@ -50,19 +50,8 @@ namespace TicTacToe
 
                 UIMethods.PrintBoard(board);
 
-                if (LogicMethod.CheckForTheWinningPlayer(board, TTTConstants.HUMAN_SYMBOL))
+                if (LogicMethod.CheckGameStatus(board))
                 {
-                    UIMethods.DisplayThatHumanHasWon();
-                    break;
-                }
-                if (LogicMethod.CheckForTheWinningPlayer(board, TTTConstants.COMPUTER_SYMBOL))
-                {
-                    UIMethods.DisplayThatComputerHasWon();
-                    break;
-                }
-                if (LogicMethod.IsBoardFull(board))
-                {
-                    UIMethods.DisplayDraw();
                     break;
                 }
                 isPlayer1Turn = !isPlayer1Turn;

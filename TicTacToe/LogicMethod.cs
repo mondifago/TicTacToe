@@ -24,7 +24,7 @@ namespace TicTacToe
             }
         }
 
-        public static void HumanMakeMove(char[,] board, int row, int col, char symbol)
+        public static void MakeHumanMove(char[,] board, int row, int col, char symbol)
         {
             if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
             {
@@ -222,6 +222,25 @@ namespace TicTacToe
             return true;
         }
 
+        public static bool CheckGameStatus(char[,] board)
+        {
+            if (CheckForTheWinningPlayer(board, TTTConstants.HUMAN_SYMBOL))
+            {
+                UIMethods.DisplayThatHumanHasWon();
+                return true;
+            }
+            if (CheckForTheWinningPlayer(board, TTTConstants.COMPUTER_SYMBOL))
+            {
+                UIMethods.DisplayThatComputerHasWon();
+                return true;
+            }
+            if (IsBoardFull(board))
+            {
+                UIMethods.DisplayDraw();
+                return true;
+            }
+            return false;
+        }
     }
 }
 
