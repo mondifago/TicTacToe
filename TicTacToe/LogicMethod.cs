@@ -83,43 +83,32 @@ namespace TicTacToe
                 int score = evaluateScore(currentBoard, currentPlayerSymbol);
                 if (score != TTTConstants.MINIMAX_DRAW_SCORE) return score - depth;
 
-                if (isMaximizing)
+                int bestScore = isMaximizing ? int.MinValue : int.MaxValue;
+                char playerSymbol = isMaximizing ? currentPlayerSymbol : (currentPlayerSymbol == TTTConstants.HUMAN_SYMBOL ? TTTConstants.COMPUTER_SYMBOL : TTTConstants.HUMAN_SYMBOL);
+
+                for (int row = TTTConstants.ZERO_BASED_INDEX; row < currentBoard.GetLength(0); row++)
                 {
-                    int maxScore = int.MinValue;
-                    for (int row = TTTConstants.ZERO_BASED_INDEX; row < currentBoard.GetLength(0); row++)
+                    for (int col = TTTConstants.ZERO_BASED_INDEX; col < currentBoard.GetLength(1); col++)
                     {
-                        for (int col = TTTConstants.ZERO_BASED_INDEX; col < currentBoard.GetLength(1); col++)
+                        if (currentBoard[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
                         {
-                            if (currentBoard[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
+                            currentBoard[row, col] = playerSymbol;
+                            int currentScore = minimax(currentBoard, depth + 1, !isMaximizing);
+                            currentBoard[row, col] = TTTConstants.BOARD_EMPTY_SPACE;
+
+                            if (isMaximizing)
                             {
-                                currentBoard[row, col] = currentPlayerSymbol;
-                                int currentScore = minimax(currentBoard, depth + 1, false);
-                                currentBoard[row, col] = TTTConstants.BOARD_EMPTY_SPACE;
-                                maxScore = Math.Max(maxScore, currentScore);
+                                bestScore = Math.Max(bestScore, currentScore);
+                            }
+                            else
+                            {
+                                bestScore = Math.Min(bestScore, currentScore);
                             }
                         }
                     }
-                    return maxScore;
                 }
-                else
-                {
-                    int minScore = int.MaxValue;
-                    char opponentSymbol = (currentPlayerSymbol == TTTConstants.HUMAN_SYMBOL) ? TTTConstants.COMPUTER_SYMBOL : TTTConstants.HUMAN_SYMBOL;
-                    for (int row = TTTConstants.ZERO_BASED_INDEX; row < currentBoard.GetLength(0); row++)
-                    {
-                        for (int col = TTTConstants.ZERO_BASED_INDEX; col < currentBoard.GetLength(1); col++)
-                        {
-                            if (currentBoard[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
-                            {
-                                currentBoard[row, col] = opponentSymbol;
-                                int currentScore = minimax(currentBoard, depth + 1, true);
-                                currentBoard[row, col] = TTTConstants.BOARD_EMPTY_SPACE;
-                                minScore = Math.Min(minScore, currentScore);
-                            }
-                        }
-                    }
-                    return minScore;
-                }
+
+                return bestScore;
             };
 
             for (int row = TTTConstants.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
@@ -129,17 +118,19 @@ namespace TicTacToe
                     if (board[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
                     {
                         board[row, col] = currentPlayerSymbol;
-                        int score = minimax(board, TTTConstants.MINIMAX_DRAW_SCORE, false);
+                        int moveScore = minimax(board, 0, false);
                         board[row, col] = TTTConstants.BOARD_EMPTY_SPACE;
-                        if (score > bestScore)
+
+                        if (moveScore > bestScore)
                         {
-                            bestScore = score;
+                            bestScore = moveScore;
                             bestRow = row;
                             bestCol = col;
                         }
                     }
                 }
             }
+
             return (bestRow, bestCol);
         }
 

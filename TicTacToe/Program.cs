@@ -41,7 +41,6 @@ namespace TicTacToe
                             Console.WriteLine(ex.Message);
                         }
                     }
-
                 }
                 if (currentPlayer == TTTConstants.COMPUTER_PLAYER)
                 {
