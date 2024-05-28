@@ -47,20 +47,20 @@ namespace TicTacToe
             return gameMode;
         }
        
-        public static (int, int) GetCoordinatesForHumanMove()
+        public static (int, int) GetCoordinatesForHumanMove(char[,] board)
         {
             int row, col;
        
-                Console.Write($"Enter row ({TTTConstants.ROW_1}-{TTTConstants.ROW_3}):\t");
-                row = GetValidInput();
+                Console.Write($"Enter row ({board.GetLength(0) - 2}-{board.GetLength(0)}):\t");
+                row = GetValidInput(board);
 
-                Console.Write($"Enter column ({TTTConstants.COL_1}-{TTTConstants.COL_3}):\t");
-                col = GetValidInput();
+                Console.Write($"Enter column ({board.GetLength(1) - 2}-{board.GetLength(1)}):\t");
+                col = GetValidInput(board);
 
             return (row, col);
         }
 
-        public static int GetValidInput()
+        public static int GetValidInput(char[,] board)
         {
             int input;
             do
@@ -71,9 +71,9 @@ namespace TicTacToe
                     continue;
                 }
                 input--;
-                if (input < TTTConstants.ZERO_BASED_INDEX || input > TTTConstants.THIRD_INDEX) 
+                if (input < 0 || input > board.GetLength(0) - 1) 
                 {
-                    Console.Write($"Input out of range! Please enter a number between {TTTConstants.ROW_1} and {TTTConstants.ROW_3}:\t");
+                    Console.Write($"Input out of range! Please enter a number between {board.GetLength(0) - 2} and {board.GetLength(0)}:\t");
                     continue;
                 }
                 break;
@@ -85,21 +85,21 @@ namespace TicTacToe
 
         public static void PrintBoard(char[,] board)
         {
-            Console.WriteLine($"   {TTTConstants.COL_1}   {TTTConstants.COL_2}   {TTTConstants.COL_3}");
+            Console.WriteLine($"   {board.GetLength(1)-2}   {board.GetLength(1) - 1}   {board.GetLength(1)}");
             Console.WriteLine(" -------------");
-            for (int row = TTTConstants.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
                 Console.Write((row + 1) + TTTConstants.VERTICAL_LINE);
-                for (int col = TTTConstants.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
                     Console.Write($" {board[row, col]} ");
-                    if (col < TTTConstants.THIRD_INDEX)
+                    if (col < board.GetLength(1) - 1)
                     {
                         Console.Write(TTTConstants.VERTICAL_LINE);
                     }
                 }
                 Console.WriteLine();
-                if (row < TTTConstants.THIRD_INDEX)
+                if (row < board.GetLength(0) - 1)
                 {
                     Console.WriteLine(" -------------");
                 }

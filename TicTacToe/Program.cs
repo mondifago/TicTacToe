@@ -29,7 +29,7 @@ namespace TicTacToe
                     bool validMove = false;
                     while (!validMove)
                     {
-                        (int row, int col) = UIMethods.GetCoordinatesForHumanMove();
+                        (int row, int col) = UIMethods.GetCoordinatesForHumanMove(board);
                         //now make human move
                         try
                         {

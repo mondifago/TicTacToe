@@ -15,9 +15,9 @@ namespace TicTacToe
 	{
         public static void InitializeBoard(char[,] board)
         {
-            for (int row = TTTConstants.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int col = TTTConstants.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
                     board[row, col] = TTTConstants.BOARD_EMPTY_SPACE;
                 }
@@ -26,7 +26,7 @@ namespace TicTacToe
 
         public static void MakeHumanMove(char[,] board, int row, int col, char symbol)
         {
-            if (row < TTTConstants.ZERO_BASED_INDEX || row >= board.GetLength(0) || col < TTTConstants.ZERO_BASED_INDEX || col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
+            if (row < 0 || row >= board.GetLength(0) || col < 0|| col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
             {
                 throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
                 
@@ -39,29 +39,29 @@ namespace TicTacToe
         {
             if (gameMode == TTTConstants.EASY_MODE)
             {
-                (int row, int col) = MakeComputerMoveBasedOnEasyMode(board);
+                (int row, int col) = MakeAIMoveEasyMode(board);
                 board[row, col] = TTTConstants.COMPUTER_SYMBOL;
             }
             if (gameMode == TTTConstants.DIFFICULT_MODE)
             {
-                (int row, int col) = MakeComputerMoveBasedOnDifficultMode(board);
+                (int row, int col) = MakeAIMoveDifficultMode(board);
                 board[row, col] = TTTConstants.COMPUTER_SYMBOL;
             }
         }
 
-        public static (int, int) MakeComputerMoveBasedOnEasyMode(char[,] board)
+        public static (int, int) MakeAIMoveEasyMode(char[,] board)
         {
             int row, col;
             do
             {
-                row = RandomClass.RandomInstance.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
-                col = RandomClass.RandomInstance.Next(TTTConstants.ZERO_BASED_INDEX, TTTConstants.BOARD_DIMENSION);
+                row = RandomClass.RandomInstance.Next(0, TTTConstants.BOARD_DIMENSION);
+                col = RandomClass.RandomInstance.Next(0, TTTConstants.BOARD_DIMENSION);
             } while (board[row, col] != TTTConstants.BOARD_EMPTY_SPACE);
 
             return (row, col);
         }
 
-        public static (int, int) MakeComputerMoveBasedOnDifficultMode(char[,] board)
+        public static (int, int) MakeAIMoveDifficultMode(char[,] board)
         {
             int bestScore = int.MinValue;
             int bestRow = TTTConstants.INITIAL_INVALID_VALUE;
@@ -86,9 +86,9 @@ namespace TicTacToe
                 int bestScore = isMaximizing ? int.MinValue : int.MaxValue;
                 char playerSymbol = isMaximizing ? currentPlayerSymbol : (currentPlayerSymbol == TTTConstants.HUMAN_SYMBOL ? TTTConstants.COMPUTER_SYMBOL : TTTConstants.HUMAN_SYMBOL);
 
-                for (int row = TTTConstants.ZERO_BASED_INDEX; row < currentBoard.GetLength(0); row++)
+                for (int row = 0; row < currentBoard.GetLength(0); row++)
                 {
-                    for (int col = TTTConstants.ZERO_BASED_INDEX; col < currentBoard.GetLength(1); col++)
+                    for (int col = 0; col < currentBoard.GetLength(1); col++)
                     {
                         if (currentBoard[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
                         {
@@ -111,9 +111,9 @@ namespace TicTacToe
                 return bestScore;
             };
 
-            for (int row = TTTConstants.ZERO_BASED_INDEX; row < board.GetLength(0); row++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int col = TTTConstants.ZERO_BASED_INDEX; col < board.GetLength(1); col++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
                     if (board[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
                     {
@@ -138,44 +138,44 @@ namespace TicTacToe
         {
             Func<int, int, bool> checkLine = (x, y) =>
             {
-                return Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[x, i] == symbol) ||
-                       Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, y] == symbol);
+                return Enumerable.Range(0, board.GetLength(0)).All(i => board[x, i] == symbol) ||
+                       Enumerable.Range(0, board.GetLength(1)).All(i => board[i, y] == symbol);
             };
 
             Func<bool> checkDiagonals = () =>
             {
-                return Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).All(i => board[i, i] == symbol) ||
-                       Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(1)).All(i => board[i, TTTConstants.THIRD_INDEX - i] == symbol);
+                return Enumerable.Range(0, board.GetLength(0)).All(i => board[i, i] == symbol) ||
+                       Enumerable.Range(0, board.GetLength(1)).All(i => board[i, 2 - i] == symbol);
             };
-            return Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).Any(i => checkLine(i, i)) || checkDiagonals();
+            return Enumerable.Range(0, board.GetLength(0)).Any(i => checkLine(i, i)) || checkDiagonals();
         }
 
         public static char CheckForTheWinningSymbol(char[,] board)
         {
             // Check horizontal lines
-            for (int i = TTTConstants.ZERO_BASED_INDEX; i < board.GetLength(0); i++)
+            for (int i = 0; i < board.GetLength(0); i++)
             {
-                char winningChar = CheckLine(board, Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).Select(j => (i, j)));
+                char winningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(j => (i, j)));
                 if (winningChar != TTTConstants.BOARD_EMPTY_SPACE)
                 {
                     return winningChar;
                 }
             }
             // Check vertical lines
-            for (int j = TTTConstants.ZERO_BASED_INDEX; j < board.GetLength(0); j++)
+            for (int j = 0; j < board.GetLength(0); j++)
             {
-                char winningChar = CheckLine(board, Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).Select(i => (i, j)));
+                char winningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, j)));
                 if (winningChar != TTTConstants.BOARD_EMPTY_SPACE)
                 {
                     return winningChar;
                 }
             }
-            char diagonal1WinningChar = CheckLine(board, Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).Select(i => (i, i)));
+            char diagonal1WinningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, i)));
             if (diagonal1WinningChar != TTTConstants.BOARD_EMPTY_SPACE)
             {
                 return diagonal1WinningChar;
             }
-            char diagonal2WinningChar = CheckLine(board, Enumerable.Range(TTTConstants.ZERO_BASED_INDEX, board.GetLength(0)).Select(i => (i, board.GetLength(0) - 1 - i)));
+            char diagonal2WinningChar = CheckLine(board, Enumerable.Range(0, board.GetLength(0)).Select(i => (i, board.GetLength(0) - 1 - i)));
             if (diagonal2WinningChar != TTTConstants.BOARD_EMPTY_SPACE)
             {
                 return diagonal2WinningChar;
