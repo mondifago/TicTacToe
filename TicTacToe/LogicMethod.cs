@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Security.Cryptography;
+using TicTacToe;
+
 namespace TicTacToe
 {
     public static class RandomClass
@@ -24,15 +27,9 @@ namespace TicTacToe
             }
         }
 
-        public static void MakeHumanMove(char[,] board, int row, int col, char symbol)
+        public static void MakeHumanMove(char[,] board, int row, int col)
         {
-            if (row < 0 || row >= board.GetLength(0) || col < 0|| col >= board.GetLength(1) || board[row, col] != TTTConstants.BOARD_EMPTY_SPACE)
-            {
-                throw new InvalidOperationException("Invalid move! Please choose an empty cell.");
-                
-            }
-
-            board[row, col] = symbol;
+            board[row, col] = TTTConstants.HUMAN_SYMBOL;
         }
 
         public static void DecideComputerMoveBasedOnGameMode(char[,] board, int gameMode)
@@ -107,7 +104,6 @@ namespace TicTacToe
                         }
                     }
                 }
-
                 return bestScore;
             };
 
@@ -130,7 +126,6 @@ namespace TicTacToe
                     }
                 }
             }
-
             return (bestRow, bestCol);
         }
 

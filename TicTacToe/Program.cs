@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using TicTacToe;
 
 namespace TicTacToe
 {
@@ -26,22 +28,10 @@ namespace TicTacToe
 
                 if (currentPlayer == TTTConstants.HUMAN_PLAYER)
                 {
-                    bool validMove = false;
-                    while (!validMove)
-                    {
-                        (int row, int col) = UIMethods.GetCoordinatesForHumanMove(board);
-                        //now make human move
-                        try
-                        {
-                            LogicMethod.MakeHumanMove(board, row, col, TTTConstants.HUMAN_SYMBOL);
-                            validMove = true;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                    }
+                    (int row, int col) = UIMethods.GetCoordinatesForHumanMove(board);
+                    LogicMethod.MakeHumanMove(board, row, col);
                 }
+
                 if (currentPlayer == TTTConstants.COMPUTER_PLAYER)
                 {
                     LogicMethod.DecideComputerMoveBasedOnGameMode(board, gameMode);
@@ -58,3 +48,5 @@ namespace TicTacToe
         }
     }
 }
+
+

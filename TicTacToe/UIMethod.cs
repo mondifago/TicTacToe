@@ -50,13 +50,25 @@ namespace TicTacToe
         public static (int, int) GetCoordinatesForHumanMove(char[,] board)
         {
             int row, col;
-       
+
+            while (true)
+            {
+
                 Console.Write($"Enter row ({board.GetLength(0) - 2}-{board.GetLength(0)}):\t");
                 row = GetValidInput(board);
 
                 Console.Write($"Enter column ({board.GetLength(1) - 2}-{board.GetLength(1)}):\t");
                 col = GetValidInput(board);
 
+                if (board[row, col] == TTTConstants.BOARD_EMPTY_SPACE)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("The cell is already occupied! Please enter another set of coordinates.");
+                }
+            }
             return (row, col);
         }
 
