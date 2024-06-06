@@ -15,7 +15,7 @@ namespace TicTacToe
             
             UIMethods.DisplayWelcomeMessage();
 
-            int gameMode = UIMethods.ChooseGameMode();
+            GameMode gameMode = UIMethods.ChooseGameMode();
 
             LogicMethod.InitializeBoard(board);
 

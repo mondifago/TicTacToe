@@ -32,14 +32,14 @@ namespace TicTacToe
             board[row, col] = TTTConstants.HUMAN_SYMBOL;
         }
 
-        public static void DecideComputerMoveBasedOnGameMode(char[,] board, int gameMode)
+        public static void DecideComputerMoveBasedOnGameMode(char[,] board, GameMode gameMode)
         {
-            if (gameMode == TTTConstants.EASY_MODE)
+            if (gameMode == GameMode.Easy)
             {
                 (int row, int col) = MakeAIMoveEasyMode(board);
                 board[row, col] = TTTConstants.COMPUTER_SYMBOL;
             }
-            if (gameMode == TTTConstants.DIFFICULT_MODE)
+            if (gameMode == GameMode.Difficult)
             {
                 (int row, int col) = MakeAIMoveDifficultMode(board);
                 board[row, col] = TTTConstants.COMPUTER_SYMBOL;

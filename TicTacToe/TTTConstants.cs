@@ -1,6 +1,12 @@
 ﻿using System;
 namespace TicTacToe
 {
+    public enum GameMode
+    {
+        Easy,
+        Difficult
+    }
+
     public static class TTTConstants
 	{
         public const int INITIAL_INVALID_VALUE = -1;
@@ -8,8 +14,6 @@ namespace TicTacToe
         public const int MINIMAX_LOOSE_SCORE = -10;
         public const int MINIMAX_DRAW_SCORE = 0;
         public const int BOARD_DIMENSION = 3;
-        public const int EASY_MODE = 1;
-        public const int DIFFICULT_MODE = 2;
         public const char HUMAN_SYMBOL = 'X';
         public const char COMPUTER_SYMBOL = 'O';
         public const char BOARD_EMPTY_SPACE = ' ';
