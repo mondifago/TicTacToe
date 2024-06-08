@@ -39,9 +39,22 @@ namespace TicTacToe
 
                 UIMethods.PrintBoard(board);
 
-                if (LogicMethod.CheckGameStatus(board))
+                char status = LogicMethod.CheckGameStatus(board);
+                if (status != TTTConstants.GAME_ONGOING)
                 {
-                    break;
+                    if (status == TTTConstants.HUMAN_SYMBOL)
+                    {
+                        UIMethods.DisplayThatHumanHasWon();
+                    }
+                    if (status == TTTConstants.COMPUTER_SYMBOL)
+                    {
+                        UIMethods.DisplayThatComputerHasWon();
+                    }
+                    if (status == TTTConstants.DRAW)
+                    {
+                        UIMethods.DisplayDraw();
+                    }
+                    break; 
                 }
                 isPlayer1Turn = !isPlayer1Turn;
             }

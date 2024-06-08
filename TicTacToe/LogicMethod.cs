@@ -208,25 +208,23 @@ namespace TicTacToe
             return true;
         }
 
-        public static bool CheckGameStatus(char[,] board)
+        public static char CheckGameStatus(char[,] board)
         {
             if (CheckForTheWinningPlayer(board, TTTConstants.HUMAN_SYMBOL))
             {
-                UIMethods.DisplayThatHumanHasWon();
-                return true;
+                return TTTConstants.HUMAN_SYMBOL;
             }
             if (CheckForTheWinningPlayer(board, TTTConstants.COMPUTER_SYMBOL))
             {
-                UIMethods.DisplayThatComputerHasWon();
-                return true;
+                return TTTConstants.COMPUTER_SYMBOL;
             }
             if (IsBoardFull(board))
             {
-                UIMethods.DisplayDraw();
-                return true;
+                return TTTConstants.DRAW; 
             }
-            return false;
+            return TTTConstants.GAME_ONGOING; 
         }
+
     }
 }
 

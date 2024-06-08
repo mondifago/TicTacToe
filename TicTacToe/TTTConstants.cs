@@ -17,6 +17,8 @@ namespace TicTacToe
         public const char HUMAN_SYMBOL = 'X';
         public const char COMPUTER_SYMBOL = 'O';
         public const char BOARD_EMPTY_SPACE = ' ';
+        public const char GAME_ONGOING = 'G';
+        public const char DRAW = 'D';
         public const string HUMAN_PLAYER = "Human";
         public const string COMPUTER_PLAYER = "Computer";
         public const string VERTICAL_LINE = "|";
