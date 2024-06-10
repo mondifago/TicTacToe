@@ -9,6 +9,7 @@ namespace TicTacToe
 
     public static class TTTConstants
 	{
+        public static readonly Random RANDOM = new Random();
         public const int INITIAL_INVALID_VALUE = -1;
         public const int MINIMAX_WIN_SCORE = 10;
         public const int MINIMAX_LOOSE_SCORE = -10;

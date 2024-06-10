@@ -4,16 +4,6 @@ using TicTacToe;
 
 namespace TicTacToe
 {
-    public static class RandomClass
-    {
-        private static readonly Random RANDOM = new Random();
-
-        public static Random RandomInstance
-        {
-            get { return RANDOM; }
-        }
-    }
-
     public static class LogicMethod
 	{
         public static void InitializeBoard(char[,] board)
@@ -51,8 +41,8 @@ namespace TicTacToe
             int row, col;
             do
             {
-                row = RandomClass.RandomInstance.Next(0, TTTConstants.BOARD_DIMENSION);
-                col = RandomClass.RandomInstance.Next(0, TTTConstants.BOARD_DIMENSION);
+                row = TTTConstants.RANDOM.Next(TTTConstants.BOARD_DIMENSION);
+                col = TTTConstants.RANDOM.Next(TTTConstants.BOARD_DIMENSION);
             } while (board[row, col] != TTTConstants.BOARD_EMPTY_SPACE);
 
             return (row, col);
